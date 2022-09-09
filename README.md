@@ -1,5 +1,7 @@
 # Cake Wallet for Android and iOS
 
+[![Flutter CI](https://github.com/anypay/cake-wallet/actions/workflows/flutter-ci.yml/badge.svg)](https://github.com/anypay/cake-wallet/actions/workflows/flutter-ci.yml)
+
 ## Open Source Multi-Currency Wallet
 
 ## Links
