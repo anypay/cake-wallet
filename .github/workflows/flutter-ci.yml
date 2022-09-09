@@ -5,12 +5,16 @@ name: Flutter CI
 on:
   push:
     branches:
-    - '*'
+      - master
+      - main
+      - dev
+      - staging
+      - fastlane
     
 # on: push    # Default will running for every branch.
     
 jobs:
-  build:
+  build-android:
     # This job will run on ubuntu virtual machine
     runs-on: ubuntu-latest
     steps:
@@ -27,6 +31,9 @@ jobs:
         channel: 'beta' # 'dev', 'alpha', default to: 'stable'
         # flutter-version: '1.12.x' # you can also specify exact version of flutter
     
+        # Get flutter dependencies.
+    - run: flutter upgrade
+
     # Get flutter dependencies.
     - run: flutter pub get
     
@@ -41,9 +48,34 @@ jobs:
     
     # Build apk.
     - run: flutter build apk
+
+        # Build apk.
+    - run: flutter build appbundle
     
     # Upload generated apk to the artifacts.
     - uses: actions/upload-artifact@v1
       with:
         name: release-apk
         path: build/app/outputs/apk/release/app-release.apk
+
+  build-ios:
+    runs-on: macos-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        architecture: x64
+        # Get flutter dependencies.
+    - run: flutter upgrade
+
+    # Get flutter dependencies.
+    - run: flutter pub get
+    
+    # Check for any formatting issues in the code.
+    - run: flutter format --set-exit-if-changed .
+
+    # Run widget tests for our flutter project.
+    - run: flutter test
+    
+    - run: flutter build ios --release --no-codesign
